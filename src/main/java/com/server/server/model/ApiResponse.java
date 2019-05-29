@@ -21,4 +21,15 @@ public class ApiResponse<T>{
     public ApiResponse(T data){
         this.data = data;
     }
+    public ApiResponse(String message){
+        this.message = message;
+    }
+
+    public static ApiResponse success(){
+        return new ApiResponse("success");
+    }
+
+    public static ApiResponse fail(){
+        return new ApiResponse("fail");
+    }
 }

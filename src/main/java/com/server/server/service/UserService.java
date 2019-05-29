@@ -1,60 +1,66 @@
 package com.server.server.service;
 
 import com.server.server.Exception.ApiException;
+import com.server.server.Exception.DuplicateUsernameException;
+import com.server.server.Util.Table;
+import com.server.server.Util.ObjMapper;
+import com.server.server.Util.SnowIdWorker;
 import com.server.server.dao.UserDao;
+import com.server.server.dao.UserRoleDao;
+import com.server.server.dto.UserDTO;
+import com.server.server.dto.UserDtoList;
+import com.server.server.dto.UserRegisterCmd;
 import com.server.server.model.ApiResponse;
 import com.server.server.model.User;
-import io.swagger.annotations.Api;
-import javassist.bytecode.stackmap.BasicBlock;
-import net.bytebuddy.asm.Advice;
-import org.apache.ibatis.session.SqlSessionFactory;
+import com.server.server.model.meta.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.system.ApplicationPid;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private UserRoleDao userRoleDao;
+    @Autowired
+    private SnowIdWorker idWorker;
+    @Autowired
+    private ObjMapper mapper;
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
-    public ApiResponse<List<User>> getAllUsers() {
+    public ApiResponse<UserDtoList> getAllUsers() {
         ApiResponse res = new ApiResponse();
         List<User> users = userDao.getAll();
-        res.setData(users);
+        UserDtoList userDtoList = new UserDtoList();
+        userDtoList.setUserDTOList((List)users.stream()
+                .map(u -> mapper.map(u,UserDTO.class)).collect(Collectors.toList()));
+        res.setData(userDtoList);
         if(users == null){
-            res.setMessage("not users in system");
+            res.setMessage("no users in system");
         }
         return res;
     }
 
-    public ApiResponse<User> getById(long id){
+    public ApiResponse<UserDTO> getById(long id){
         ApiResponse res = new ApiResponse();
         User user = userDao.getById(id);
-        res.setData(user);
         if(user == null){
             res.setMessage("user not found");
         }
+        UserDTO userDTO = (UserDTO) mapper.map(user,UserDTO.class);
+        res.setData(userDTO);
         return res;
     }
 
-    public ApiResponse addUser(User user){
-        ApiResponse res =  new ApiResponse();
-        if(getById(user.getId()) != null){
-            res.setMessage("user already exisits");
-            return res;
-        }
-        if(userDao.addUser(user) == 1){
-            res.setMessage("add user success");
-        }else{
-            res.setMessage("add user fail");
-        }
-        return res;
-    }
 
     public ApiResponse deleteUser(long id) throws ApiException {
         ApiResponse res =  new ApiResponse();
@@ -65,4 +71,30 @@ public class UserService {
         }
         return res;
     }
+
+    public ApiResponse<User> getByUsername(String username){
+        ApiResponse res = new ApiResponse();
+        User user = userDao.getByUsername(username);
+        res.setData(user);
+        if(user == null){
+            res.setMessage("user not found");
+        }
+        return res;
+    }
+
+    public void register(UserRegisterCmd userRegisterCmd) throws DuplicateUsernameException {
+        if(userDao.getByUsername(userRegisterCmd.getUsername()) != null){
+            throw new DuplicateUsernameException("user name : "+userRegisterCmd.getUsername() +" exists");
+        }
+
+        User user = (User) mapper.map(userRegisterCmd, User.class);
+        user.setId(idWorker.nextId(Table.USER));
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        user.addRole(Role.PREMIUM_MEMBER);
+        userDao.addUser(user);
+        userRoleDao.addUserRole(user.getRoles());
+    }
+
 }

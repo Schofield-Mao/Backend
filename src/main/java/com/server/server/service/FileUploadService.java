@@ -1,0 +1,43 @@
+package com.server.server.service;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+
+@Service
+@Configuration
+@ConfigurationProperties("filepath")
+@Data
+public class FileUploadService {
+
+    private String imagePath;
+
+    public String generalFileUpload(MultipartFile file, String dirPath){
+        try{
+            String fileName = file.getOriginalFilename();
+            String fileSuffix = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+            String localFileName = System.currentTimeMillis() + fileSuffix;
+            String filePath = dirPath + File.separator + localFileName;
+            File localFile = new File(filePath);
+            File imagePath = new File(dirPath);
+            if (!imagePath.exists()) {
+                imagePath.mkdirs();
+            }
+            file.transferTo(localFile);
+            return localFileName;
+        }catch (IOException e){
+            return e.getMessage();
+        }
+    }
+
+    public String imageFileUpload(MultipartFile file){
+        return generalFileUpload(file, imagePath);
+    }
+
+}
