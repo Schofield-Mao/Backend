@@ -12,6 +12,5 @@ public class ReplyTest {
     @Test
     public void replyTest(){
         ReplyDTO replyDTO = new ReplyDTO();
-        replyService.reply(1l,2l,replyDTO);
     }
 }

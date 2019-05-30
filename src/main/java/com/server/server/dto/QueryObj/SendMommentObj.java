@@ -7,7 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class SendMommentObj {
     @ApiParam
-    MultipartFile multipartFile;
-    @ApiParam
-    String content;
+    private String image_content_base64;
 }

@@ -25,6 +25,7 @@ public class User {
     private String username;
     private String password;
     private Sex sex;
+    private String avatar;
     @TableField(exist = false)
     private List<UserRole> roles;
     private String nickname;

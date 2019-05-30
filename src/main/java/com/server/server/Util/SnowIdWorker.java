@@ -45,7 +45,7 @@ public class SnowIdWorker implements IdWorker{
     private long lastStmp = -1L;//上一次时间戳
     private ConcurrentHashMap<Integer,Long> sequenceMap;
 
-    private SnowIdWorker() {
+    public SnowIdWorker() {
         long datacenterId = 1;
         long machineId = 2;
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {

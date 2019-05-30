@@ -10,7 +10,6 @@ public class Moment {
     long id;
     long userId;
     String content;
-    int media;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }

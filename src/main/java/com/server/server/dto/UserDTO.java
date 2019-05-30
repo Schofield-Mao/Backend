@@ -17,4 +17,6 @@ public class UserDTO {
     String nickname;
     @ApiModelProperty("usex")
     Sex sex;
+    @ApiModelProperty("avatar")
+    String avatar;
 }

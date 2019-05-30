@@ -30,7 +30,10 @@ public class UserController {
     @ApiOperation("get user by id")
     @GetMapping("/user/{id}")
     public ApiResponse<UserDTO> getUserById(@PathVariable(value="id") long id){
-        return userService.getById(id);
+        ApiResponse res = new ApiResponse();
+        UserDTO userDTO =  userService.getById(id);
+        res.setData(userDTO);
+        return res;
     }
 
     @ApiOperation("delete user by id")

@@ -32,4 +32,7 @@ jwt:
   tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
 
 filepath:
-  imagePath: /home/mjh/images
+  imagePath: /home/mjh/images/
+
+admin:
+  phone: 18169771910

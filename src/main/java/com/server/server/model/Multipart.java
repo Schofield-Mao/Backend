@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Multipart {
     long id;
     long momentId;
-    String link;
+    String url;
     LocalDateTime createAt;
     LocalDateTime updatedAt;
 }

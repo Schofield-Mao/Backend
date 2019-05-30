@@ -28,8 +28,8 @@ public class AuthController {
 
     @ApiOperation("adminLogin")
     @PostMapping("/adminLogin")
-    public ApiResponse<AccessJwtToken> loginAdmin(long id){
-        AccessJwtToken token = authService.loginAdmin(id);
+    public ApiResponse<AccessJwtToken> loginAdmin(String phone){
+        AccessJwtToken token = authService.loginAdmin(phone);
         ApiResponse res = new ApiResponse<>();
         res.setData(token);
         return res;

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.server.server.dto.QueryObj.PageQueryObj;
 import com.server.server.dto.QueryObj.ReplyDTO;
 import com.server.server.Util.CurrentUserId;
+import com.server.server.dto.ResponseObj.RichReplyDTO;
 import com.server.server.model.ApiResponse;
 import com.server.server.model.Reply;
 import com.server.server.service.ReplyService;
@@ -20,20 +21,20 @@ public class ReplyController {
     ReplyService replyService;
 
     @ApiOperation("reply comment")
-    @PostMapping("/reply/{commentId}")
+    @PostMapping("/reply")
     public ApiResponse reply(
-            @PathVariable(value = "commentId") long commentId, @CurrentUserId @ApiParam(hidden = true) long userId, @RequestBody ReplyDTO replyDTO){
-        replyService.reply(userId,commentId,replyDTO);
+            @CurrentUserId @ApiParam(hidden = true) long userId, @RequestBody ReplyDTO replyDTO)throws Exception{
+        replyService.insertMomentReply(userId,replyDTO);
         return ApiResponse.success();
     }
 
-    @ApiOperation("get reply by commentId")
-    @GetMapping("/reply/{commentId}")
-    ApiResponse getReplyByMomentId(
-            @PathVariable(value = "commentId")long commentId, PageQueryObj pageQuery){
-        IPage<Reply> comments = replyService.getReplyByMomentId(pageQuery, commentId);
+    @ApiOperation("get reply by mommentId")
+    @GetMapping("/reply/{mommentId}")
+    ApiResponse<RichReplyDTO> getReplyByMomentId(
+            @PathVariable(value = "mommentId")long momentId, PageQueryObj pageQuery){
+        PageQueryObj<RichReplyDTO> replys = replyService.getReplyByMomentId(pageQuery, momentId);
         ApiResponse res = new ApiResponse();
-        res.setData(comments);
+        res.setData(replys);
         return res;
     }
 

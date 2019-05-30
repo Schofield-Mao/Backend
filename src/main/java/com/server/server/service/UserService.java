@@ -14,6 +14,7 @@ import com.server.server.model.ApiResponse;
 import com.server.server.model.User;
 import com.server.server.model.meta.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,15 +51,13 @@ public class UserService {
         return res;
     }
 
-    public ApiResponse<UserDTO> getById(long id){
-        ApiResponse res = new ApiResponse();
+    public UserDTO getById(long id){
         User user = userDao.getById(id);
         if(user == null){
-            res.setMessage("user not found");
+            throw new UsernameNotFoundException("user not found");
         }
         UserDTO userDTO = (UserDTO) mapper.map(user,UserDTO.class);
-        res.setData(userDTO);
-        return res;
+        return userDTO;
     }
 
 

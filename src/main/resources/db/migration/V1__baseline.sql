@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(64) DEFAULT NULL COMMENT '密码',
   `sex`  varchar(16) DEFAULT NULL,
   `nickname` varchar(64) DEFAULT NULL,
+  `avatar` varchar(128) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -43,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `moment` (
     `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT 'moment_id',
     `user_id` bigint(11) NOT NULL COMMENT 'user_id',
     `content` varchar(1024) NOT NULL COMMENT 'character content',
-    `multipart_id` bigint(11) DEFAULT NULL COMMENT 'picture or video',
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
      PRIMARY KEY (`id`),
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `reply`(
 CREATE TABLE IF NOT EXISTS `multipart` (
     `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT 'multipart_id',
     `moment_id` bigint(11) DEFAULT NULL COMMENT 'picture or video',
-    `link` varchar(256) NOT NULL COMMENT 'link',
+    `url` varchar(256) NOT NULL COMMENT 'image-url',
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
      PRIMARY KEY (`id`),

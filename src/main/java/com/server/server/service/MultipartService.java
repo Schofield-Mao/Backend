@@ -24,17 +24,13 @@ public class MultipartService {
     @Autowired
     private FileUploadService fileUploadService;
 
-    public void insertMultipart(long momentId, MultipartFile multipartFile){
+    public void insertMultipart(long momentId, String url){
 
         Multipart multipart = new Multipart();
         multipart.setMomentId(momentId);
-
         multipart.setId(idWorker.nextId(Table.MULTIPART));
         multipart.setUpdatedAt(LocalDateTime.now());
-        multipart.setLink(fileUploadService.imageFileUpload(multipartFile));
-        if(multipartDao == null){
-            System.out.println("null");
-        }
+        multipart.setUrl(url);
         multipartDao.insert(multipart);
     }
 }
