@@ -18,7 +18,7 @@ public interface UserDao extends BaseMapper<User> {
     @Select("SELECT id,username,nickname,sex FROM users")
     List<User> getAll();
 
-    @Select("SELECT id,username,nickname,sex FROM users WHERE id = #{id}")
+    @Select("SELECT id,username,nickname,sex,avatar FROM users WHERE id = #{id}")
     User getById(long id);
 
     @Insert("INSERT INTO users (id,username,password,sex,nickname,created_at,updated_at) " +
@@ -42,5 +42,7 @@ public interface UserDao extends BaseMapper<User> {
     )
     User getByUsername(String username);
 
+    @Update("update users set avatar = #{url} where id = #{id} ")
+    void updateAvatar(String url,long id);
 }
 

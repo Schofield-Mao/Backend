@@ -34,7 +34,7 @@ public class FileUploadService {
                 imagePath.mkdirs();
             }
             file.transferTo(localFile);
-            return localFileName;
+            return filePath;
         }catch (IOException e){
             return e.getMessage();
         }
@@ -64,6 +64,4 @@ public class FileUploadService {
         }
         return path;
     }
-
-
 }

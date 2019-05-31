@@ -96,4 +96,8 @@ public class UserService {
         userRoleDao.addUserRole(user.getRoles());
     }
 
+    public void updateAvatar(String url, long id){
+        userDao.updateAvatar(url,id);
+    }
+
 }

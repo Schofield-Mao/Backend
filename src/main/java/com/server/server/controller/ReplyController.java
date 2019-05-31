@@ -1,6 +1,7 @@
 package com.server.server.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.server.server.Exception.NotFoundException;
 import com.server.server.dto.QueryObj.PageQueryObj;
 import com.server.server.dto.QueryObj.ReplyDTO;
 import com.server.server.Util.CurrentUserId;
@@ -20,23 +21,40 @@ public class ReplyController {
     @Autowired
     ReplyService replyService;
 
-    @ApiOperation("reply comment")
-    @PostMapping("/reply")
-    public ApiResponse reply(
+    @ApiOperation("reply moment")
+    @PostMapping("/moment_reply")
+    public ApiResponse replyMoment(
             @CurrentUserId @ApiParam(hidden = true) long userId, @RequestBody ReplyDTO replyDTO)throws Exception{
         replyService.insertMomentReply(userId,replyDTO);
         return ApiResponse.success();
     }
 
-    @ApiOperation("get reply by mommentId")
-    @GetMapping("/reply/{mommentId}")
-    ApiResponse<RichReplyDTO> getReplyByMomentId(
-            @PathVariable(value = "mommentId")long momentId, PageQueryObj pageQuery){
-        PageQueryObj<RichReplyDTO> replys = replyService.getReplyByMomentId(pageQuery, momentId);
+    @ApiOperation("reply reply")
+    @PostMapping("/reply_reply")
+    public ApiResponse replyReply(
+            @CurrentUserId @ApiParam(hidden = true) long userId, @RequestBody ReplyDTO replyDTO)throws Exception{
+        replyService.insertReplyReply(userId,replyDTO);
+        return ApiResponse.success();
+    }
+
+    @ApiOperation("get reply by parentId")
+    @GetMapping("/moment_reply")
+    ApiResponse<RichReplyDTO> getReplyByMomentId(long replyParentId, PageQueryObj pageQuery)throws Exception{
+        PageQueryObj<RichReplyDTO> replys = replyService.getReplyByMomentId(pageQuery, replyParentId);
         ApiResponse res = new ApiResponse();
         res.setData(replys);
         return res;
     }
+
+    @ApiOperation("get reply by parentId")
+    @GetMapping("/reply_reply")
+    ApiResponse<RichReplyDTO> getReplyByReplyId(long replyParentId, PageQueryObj pageQuery)throws Exception{
+        PageQueryObj<RichReplyDTO> replys = replyService.getReplyByReplyId(pageQuery, replyParentId);
+        ApiResponse res = new ApiResponse();
+        res.setData(replys);
+        return res;
+    }
+
 
 
 }

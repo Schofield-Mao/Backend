@@ -5,6 +5,9 @@ server:
  tomcat:
    uri-encoding: utf-8
 
+filepath:
+  imagePath: /home/mjh/images/
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/wb?useUnicode=true&characterEncoding=utf-8
@@ -22,7 +25,11 @@ spring:
       name: user
       password: 123456
 
+  mvc:
+    static-path-pattern: /**
 
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${filepath.imagePath}
 
 
 jwt:
@@ -31,8 +38,6 @@ jwt:
   tokenIssuer: mjh
   tokenSigningKey: xm8EV6Hy5RMFK4EEACIDAwQus
 
-filepath:
-  imagePath: /home/mjh/images/
 
 admin:
   phone: 18169771910
